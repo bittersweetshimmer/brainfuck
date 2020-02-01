@@ -1,7 +1,7 @@
 #pragma once
-#include <brainfuck/utilities/List.hpp>
-#include <brainfuck/Command.hpp>
+#include <brainfuck/utilities/DoublyLinkedList.hpp>
+#include <brainfuck/ParsedCommand.hpp>
 
 namespace bf {
-  using Program = bf::util::List<bf::Command>;
+  using Program = bf::util::DoublyLinkedList<bf::ParsedCommand>;
 }

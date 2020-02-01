@@ -2,18 +2,18 @@
 
 namespace bf::util {
     template<typename T>
-    struct List final {
+    struct DoublyLinkedList final {
     public:
-      ~List<T>();
+      ~DoublyLinkedList<T>();
 
       T value = T();
-      List<T>* previous = nullptr;
-      List<T>* next = nullptr;
+      DoublyLinkedList<T>* previous = nullptr;
+      DoublyLinkedList<T>* next = nullptr;
     };
 }
 
 template<typename T>
-bf::util::List<T>::~List() {
+bf::util::DoublyLinkedList<T>::~DoublyLinkedList() {
   if (this->next != nullptr) {
     this->next->previous = nullptr;
     delete this->next;

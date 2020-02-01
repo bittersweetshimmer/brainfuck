@@ -4,6 +4,6 @@
 #include <brainfuck/Program.hpp>
 
 namespace bf {
-  util::Maybe<Command> parse_command(char character);
+  bf::util::Maybe<bf::Command> parse_command(char character);
   Program* parse(const char* source);
 }
