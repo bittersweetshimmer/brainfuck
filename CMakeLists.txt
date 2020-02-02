@@ -5,4 +5,5 @@ project(brainfuck)
 set(SOURCES "./src/main.cpp" "./src/brainfuck/parse.cpp" "./src/brainfuck/State.cpp")
 
 add_executable(brainfuck ${SOURCES})
-target_include_directories(brainfuck "./include/")
+set_property(TARGET brainfuck PROPERTY CXX_STANDARD 20)
+target_include_directories(brainfuck PUBLIC "./include/")
