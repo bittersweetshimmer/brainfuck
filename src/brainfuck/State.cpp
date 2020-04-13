@@ -1,4 +1,5 @@
 #include <brainfuck/State.hpp>
+#include <brainfuck/utilities/console.hpp>
 
 bf::State::State(bf::Program* program, std::istream& input, std::ostream& output) :
   program(program), input(input), output(output), cells(new bf::Cells{ .value = 0u }) {}
@@ -17,16 +18,23 @@ int bf::State::run() {
   while (step_info.result == bf::State::StepResult::Continue);
 
   switch (step_info.result) {
-    case bf::State::StepResult::End: return EXIT_SUCCESS;
+    case bf::State::StepResult::End:
+      return EXIT_SUCCESS;
+
     case bf::State::StepResult::AllocationError:
-      std::cerr << "\033[1:37m" << "brainfuck" << "\033[0m" << ": " << "\x1B[31m" << "Memory allocation error";
-      if (step_info.command.has_value()) std::cerr << ": line " << step_info.command.value().line << ", column " << step_info.command.value().column; 
-      std::cerr << "\033[0m\n";
+      std::cerr << bf::util::console::bold_white << "brainfuck" << bf::util::console::reset << ": " << bf::util::console::red << "Memory allocation error";
+      if (step_info.command.has_value())
+        std::cerr << ": line " << step_info.command.value().line << ", column " << step_info.command.value().column; 
+      std::cerr << bf::util::console::reset << std::endl;
+
       return EXIT_FAILURE;
+
     case bf::State::StepResult::InvalidJump:
-      std::cerr << "\033[1:37m" << "brainfuck" << "\033[0m" << ": " << "\x1B[31m" << "Invalid jump";
-      if (step_info.command.has_value()) std::cerr << ": line " << step_info.command.value().line << ", column " << step_info.command.value().column; 
-      std::cerr << "\033[0m\n";
+      std::cerr << bf::util::console::bold_white << "brainfuck" << bf::util::console::reset << ": " << bf::util::console::red << "Invalid jump";
+      if (step_info.command.has_value())
+        std::cerr << ": line " << step_info.command.value().line << ", column " << step_info.command.value().column; 
+      std::cerr << bf::util::console::reset << std::endl;
+
       return EXIT_FAILURE;
   }
 
@@ -66,12 +74,12 @@ bf::State::StepInfo bf::State::step() {
           auto matching_depth = 0;
 
           while (true) {
-            if (current == nullptr) return { .result = bf::State::StepResult::InvalidJump, .command = bf::util::some(parsed_command) };
+            if (current == nullptr) return { .result = bf::State::StepResult::InvalidJump, .command = bf::util::some(std::move(parsed_command)) };
 
             if (current->value.command == bf::Command::JumpNonZero) {
               if (matching_depth == 0) {
                 this->program = current->next;
-                return { .result = bf::State::StepResult::Continue, .command = bf::util::some(parsed_command) };
+                return { .result = bf::State::StepResult::Continue, .command = bf::util::some(std::move(parsed_command)) };
               }
 
               matching_depth -= 1;
@@ -90,12 +98,12 @@ bf::State::StepInfo bf::State::step() {
           auto matching_depth = 0;
 
           while (true) {
-            if (current == nullptr) return { .result = bf::State::StepResult::InvalidJump, .command = bf::util::some(parsed_command) };
+            if (current == nullptr) return { .result = bf::State::StepResult::InvalidJump, .command = bf::util::some(std::move(parsed_command)) };
 
             if (current->value.command == bf::Command::JumpZero) {
               if (matching_depth == 0) {
                 this->program = current->next;
-                return { .result = bf::State::StepResult::Continue, .command = bf::util::some(parsed_command) };
+                return { .result = bf::State::StepResult::Continue, .command = bf::util::some(std::move(parsed_command)) };
               }
 
               matching_depth -= 1;
@@ -111,10 +119,10 @@ bf::State::StepInfo bf::State::step() {
     }
   }
   catch (std::bad_alloc& err) {
-    return { .result = bf::State::StepResult::AllocationError, .command = bf::util::some(parsed_command) };
+    return { .result = bf::State::StepResult::AllocationError, .command = bf::util::some(std::move(parsed_command)) };
   }
 
   this->program = this->program->next;
   
-  return { .result = bf::State::StepResult::Continue, .command = bf::util::some(parsed_command) };
+  return { .result = bf::State::StepResult::Continue, .command = bf::util::some(std::move(parsed_command)) };
 }

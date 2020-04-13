@@ -30,7 +30,7 @@ namespace bf::util {
 
 template<typename T>
 constexpr bf::util::Maybe<std::decay_t<T>> bf::util::some(T&& value) {
-  return bf::util::Maybe<std::decay_t<T>>(std::move(value));
+  return bf::util::Maybe<std::decay_t<T>>(std::forward<T>(value));
 }
 
 template<typename T>

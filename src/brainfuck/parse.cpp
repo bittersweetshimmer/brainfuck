@@ -1,5 +1,6 @@
 #include <iostream>
 #include <brainfuck/parse.hpp>
+#include <brainfuck/utilities/console.hpp>
 
 bf::Program* bf::parse(const char* source) {
   bf::Program* head = nullptr;
@@ -23,9 +24,9 @@ bf::Program* bf::parse(const char* source) {
       }
     }
     else {
-      std::cerr << "\033[1:37m" << "brainfuck" << "\033[0m" << ": " << "\x1B[33m" << "Unknown symbol \'"
+      std::cerr << bf::util::console::bold_white << "brainfuck" << bf::util::console::reset << ": " << bf::util::console::yellow << "Unknown symbol \'"
         << source[i] << "\': line " << current_line << ", column " << current_column
-        << "\033[0m\n";
+        << bf::util::console::reset << std::endl;
     }
 
     if (source[i] == '\n') {

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(brainfuck)
 
-set(SOURCES "./src/main.cpp" "./src/brainfuck/parse.cpp" "./src/brainfuck/State.cpp")
+set(SOURCES "./src/main.cpp" "./src/brainfuck/parse.cpp" "./src/brainfuck/State.cpp" "./src/brainfuck/utilities/console.cpp")
 
 add_executable(brainfuck ${SOURCES})
 set_property(TARGET brainfuck PROPERTY CXX_STANDARD 20)
